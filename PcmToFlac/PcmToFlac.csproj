@@ -34,6 +34,10 @@
       <HintPath>..\packages\CSCore.1.1.0\lib\net35-client\CSCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FlacBox, Version=1.0.1.0, Culture=neutral, PublicKeyToken=4fc09ef1349866ee, processorArchitecture=MSIL">
+      <HintPath>..\packages\FlacBox.1.0.1\lib\net35\FlacBox.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,16 +50,6 @@
   <ItemGroup>
     <Compile Include="PcmToFlac.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CUETools.Codecs.FLAKE\CUETools.Codecs.FLAKE.csproj">
-      <Project>{082d6b9e-326e-4d15-9798-edae9ede70a6}</Project>
-      <Name>CUETools.Codecs.FLAKE</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CUETools.Codecs\CUETools.Codecs.csproj">
-      <Project>{6458a13a-30ef-45a9-9d58-e5031b17bee2}</Project>
-      <Name>CUETools.Codecs</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

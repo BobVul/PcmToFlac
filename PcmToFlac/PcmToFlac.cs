@@ -2,8 +2,7 @@
 using CSCore.Codecs;
 using CSCore.Codecs.RAW;
 using CSCore.DSP;
-using CUETools.Codecs;
-using CUETools.Codecs.FLAKE;
+using FlacBox;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,21 +26,14 @@ namespace PcmToFlac
                             .ChangeSampleRate(16000)
                             .ToSampleSource()
                             .ToWaveSource(16)
-                            .WriteToStream(resampledSource);
+                            .WriteToWaveStream(resampledSource);
                     }
-                    resampledSource.Seek(0, SeekOrigin.Begin);
-
-                    // https://bitbucket.org/josephcooney/cloudspeech/src/8619cf699541ed2cd3f0ce52208a5f8a273fdc37/CloudSpeech/SpeechToText.cs?at=default&fileviewer=file-view-default
-                    var reader = new WAVReader(null, resampledSource, new AudioPCMConfig(16, 1, 16000));
-
-                    var buf = new AudioBuffer(reader, 0x10000);
-                    var flakeWriter = new FlakeWriter(null, dest, reader.PCM);
-                    flakeWriter.CompressionLevel = 11;
-                    while (reader.Read(buf, -1) != 0)
+                    // unfortunately WriteToWaveStream closes the stream...
+                    using (var resampledSourceCopy = new MemoryStream(resampledSource.ToArray()))
                     {
-                        flakeWriter.Write(buf);
+                        resampledSourceCopy.CopyTo(new WaveOverFlacStream(dest, WaveOverFlacStreamMode.Encode, true));
                     }
-                    flakeWriter.Close();
+
                     return dest.ToArray();
                 }
             }
