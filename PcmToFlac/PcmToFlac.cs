@@ -16,7 +16,8 @@ namespace PcmToFlac
     {
         public static byte[] Convert(byte[] input, int channels)
         {
-            using (var dest = new MemoryStream()) {
+            using (var dest = new MemoryStream())
+            {
                 using (var resampledSource = new MemoryStream())
                 {
                     using (var source = new RawDataReader(new MemoryStream(input, false), new WaveFormat(48000, 16, channels)))
@@ -28,12 +29,13 @@ namespace PcmToFlac
                             .ToWaveSource(16)
                             .WriteToWaveStream(resampledSource);
                     }
-                    // unfortunately WriteToWaveStream closes the stream...
-                    using (var resampledSourceCopy = new MemoryStream(resampledSource.ToArray()))
+                    
+                    using (var encStream = new WaveOverFlacStream(dest, WaveOverFlacStreamMode.Encode, true))
                     {
-                        resampledSourceCopy.CopyTo(new WaveOverFlacStream(dest, WaveOverFlacStreamMode.Encode, true));
+                        var buf = resampledSource.ToArray();
+                        encStream.Write(buf, 0, buf.Length);
                     }
-
+                    
                     return dest.ToArray();
                 }
             }
